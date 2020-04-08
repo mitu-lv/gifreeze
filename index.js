@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 const fetch = require('node-fetch');
-const {parseGIF, decompressFrames} = require('gifuct-js');
+const {parseGIF, decompressFrame} = require('gifuct-js');
 const GIFEncoder = require('gifencoder');
 const {createCanvas} = require('canvas');
 
@@ -30,12 +30,14 @@ function dataBufferFromFrame(frame) {
 }
 
 async function gifreezeUrl(url, frameIndex = 0) {
-    const frames = await fetch(url)
+    const frame = await fetch(url)
         .then(resp => resp.arrayBuffer())
         .then(buff => parseGIF(buff))
-        .then(gif => decompressFrames(gif, true));
-
-    const frame = frames[frameIndex] || frames[0];
+        .then(gif => {
+            const frames = gif.frames.filter(f => f.image);
+            const frame = frames[frameIndex] || frames[0];
+            return decompressFrame(frame, gif.gct, true);
+        });
 
     return dataBufferFromFrame(frame);
 }
@@ -43,10 +45,8 @@ async function gifreezeUrl(url, frameIndex = 0) {
 function gifreezeFile(path, frameIndex = 0) {
     const buff = fs.readFileSync(path);
     const gif = parseGIF(buff);
-    const frames = decompressFrames(gif, true);
-
-    const frame = frames[frameIndex] || frames[0];
-
+    const frames = gif.frames.filter(f => f.image);
+    const frame = decompressFrame(frames[frameIndex] || frames[0], gif.gct, true);
     return dataBufferFromFrame(frame);
 }
 
