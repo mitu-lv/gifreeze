@@ -1,8 +1,6 @@
 const {gifreezeFile} = require('../../index');
 const fs = require('fs');
 
-(async () => {
-    const imageBuffer = await gifreezeFile('./horse.gif');
+const imageBuffer = gifreezeFile('./horse.gif');
 
-    fs.writeFileSync('./result.gif', imageBuffer)
-})();
+fs.writeFileSync('./result.gif', imageBuffer);
