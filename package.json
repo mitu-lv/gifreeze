@@ -9,7 +9,7 @@
   "author": "Mikus Lacarus",
   "license": "MIT",
   "dependencies": {
-    "canvas": "2.6.1",
+    "canvas": "2.11.2",
     "gifencoder": "2.0.1",
     "gifuct-js": "github:matt-way/gifuct-js",
     "node-fetch": "2.6.7"
